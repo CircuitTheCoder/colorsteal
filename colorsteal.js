@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         colorsteal
 // @namespace    https://multiplayerpiano.org/#
-// @version      v1.0-alpha2.5 - fave edition
+// @version      v1.0-alpha3 - stats edition
 // @description  steal colorssss >:)))))
 // @author       You
 // @match        https://multiplayerpiano.org/*
@@ -15,7 +15,7 @@ MPP.client.on('a', function(m) {
     // cmds
     if (m.p.id == MPP.client.participantId) {
         if (cmd == "fave") {
-            localStorage.setItem("fave", m.a.substring(4).trim())
+            localStorage.setItem("fave", localStorage.fave + ", " + m.a.substring(4).trim())
             MPP.chat.send("faved!")
         }
         if (cmd == "faves") {
@@ -31,11 +31,23 @@ MPP.client.on('a', function(m) {
             } else {
                 if (args[1] == "y") {
                 MPP.chat.send("wiped!")
-                localStorage.setItem("fave", "")
+                localStorage.setItem("fave", null)
                 } else {
                 if (args[1] == "n") { MPP.chat.send("ok!") }
                 }
             }
+        }
+        if (cmd == "afk") {
+            MPP.client.sendArray([{
+                m: 'userset',
+                set: {
+                    name: m.p.name + " [AFK]",
+                    color: "#004794"
+                }
+            }]);
+        }
+        if (cmd == "back") {
+            MPP.chat.send("reset")
         }
         if (cmd == "steal") {
         MPP.client.sendArray([{
